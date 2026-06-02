@@ -36,6 +36,12 @@ Every feature, every fix, every investigation starts with: is this latent or det
   - **Gate tests** — deterministic, local, free, <2s. Run on every commit via pre-commit hook. Never flaky.
   - **Periodic evals** — paid (LLM calls), slower, quality-measuring. Run before ship and nightly. Allowed to be non-deterministic but must have a pass threshold.
 
+### LLM access — local Claude Code, not the API
+
+- When the software we build needs to call an LLM, do NOT use an LLM API (Anthropic API, OpenAI API, any hosted inference endpoint) unless Julien explicitly instructs it. Route the call through the local Claude Code instead.
+- If no LLM service exists yet in the project, build one. Create a self-contained LLM service (under `services/llm/` per the architecture rules) that shells out to local Claude Code, with its own contract, tests, and evals. Every other service calls that contract, never an external API.
+- Always use the best available model by default unless Julien explicitly instructs otherwise. No silent downgrades to a cheaper or smaller model for cost.
+
 ### Tech choice — vanilla by default
 
 - Simplest vanilla tech wins. No framework-of-the-month. No clever abstractions for hypothetical reuse.
@@ -80,6 +86,15 @@ At the end of every task, report one of:
 - **NEEDS_CONTEXT** — Missing information required to continue. State exactly what's needed.
 
 "Partially done" is not a status. Either the feature ships (DONE) or it doesn't (BLOCKED / NEEDS_CONTEXT). Honesty about incompleteness beats pretending.
+
+## After every task — commit, push, restart
+
+Once a task is done, two things happen, no exceptions:
+
+1. **Commit and push.** Stage the work, write a clear commit message, push to GitHub. Don't wait to be asked. Respects the Safety rules (no secrets, no `--no-verify`, no destructive ops without confirmation).
+2. **Report what to restart.** Tell Julien exactly which service / system / program needs to be restarted for the change to take effect, with the full list of commands to run. If nothing needs restarting, say so explicitly.
+
+For restart commands that need `sudo`: never run them yourself. List them for Julien to run, clearly marked as his to execute.
 
 ## Confusion protocol
 

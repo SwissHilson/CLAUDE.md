@@ -59,7 +59,7 @@ If your tool does not follow symlinks, just copy the file and rename it. The rul
 
 ## Make it yours (replace my name)
 
-The file refers to me by name in several places ("impress Julien", "ask Julien", "tell Julien what to restart"). The agent uses that name as the human it answers to. Swap it for yours:
+The file refers to me by name in several places ("impress Hilson", "ask Hilson", "tell Hilson what to restart"). The agent uses that name as the human it answers to. Swap it for yours:
 
 ```bash
 # macOS
